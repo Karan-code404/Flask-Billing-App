@@ -60,7 +60,7 @@ Run the Application:
 Bash
 
 python app.py
-The application will be available at http://127.0.0.1:5000.
+The application will be available at https://render.com/docs/web-services#port-binding.
 
 Deployment
 This application is deployed on Render.com. It uses the provided start.sh file to run the server.
