@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bill History</title>
+    <style>
+        body { font-family: sans-serif; max-width: 1000px; margin: auto; padding: 20px; }
+        .navbar { overflow: hidden; background-color: #333; }
+        .navbar a { float: left; display: block; color: white; text-align: center; padding: 14px 20px; text-decoration: none; }
+        .navbar a:hover { background-color: #ddd; color: black; }
+        .navbar a.right { float: right; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('bill_generator') }}">Bill Generator</a>
+        <a href="{{ url_for('history') }}">Bill History</a>
+        <a href="{{ url_for('admin_panel') }}">Admin Panel</a>
+        <a href="{{ url_for('logout') }}" class="right">Logout</a>
+    </div>
+
+    <h1>Bill History</h1>
+    <hr>
+    <div id="bill-history-list">
+        {% for bill in history %}
+        <div>
+            <h4>Client: {{ bill.client_name }}</h4>
+            <p>Date: {{ bill.timestamp }}</p>
+            <p>Total Amount: ${{ "%.2f"|format(bill.total_amount) }}</p>
+            <ul>
+                {% for item in bill.bill_data %}
+                    <li>{{ item.name }} (x{{ item.quantity }}) - ${{ "%.2f"|format(item.total) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+</body>
+</html>

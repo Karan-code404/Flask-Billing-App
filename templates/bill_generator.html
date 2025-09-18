@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bill Generator</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            /* Vibrant Gradient Background */
+            background: linear-gradient(135deg, #FF6B6B, #FFCD6E, #FF894F, #FF66A3);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+
+        /* Gradient Animation for a dynamic background */
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Main content wrapper */
+        .main-wrapper {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        .navbar { 
+            overflow: hidden; 
+            background-color: #4CAF50; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+        }
+        .navbar a { 
+            float: left; 
+            display: block; 
+            color: white; 
+            text-align: center; 
+            padding: 14px 20px; 
+            text-decoration: none; 
+            font-weight: bold;
+        }
+        .navbar a:hover { 
+            background-color: #45a049; 
+        }
+        .navbar a.right { 
+            float: right; 
+        }
+
+        h1, h2 { 
+            text-align: center; 
+            color: #4CAF50; 
+            font-weight: 600;
+        }
+
+        /* Layout for the bill and add item forms */
+        .forms-container { 
+            display: flex; 
+            justify-content: space-between; 
+            gap: 20px; 
+        }
+
+        .form-section {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .form-section h2 {
+            margin-top: 0;
+            color: #555;
+            font-size: 1.5rem;
+        }
+
+        /* Form elements styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input[type="text"], input[type="number"] {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px; 
+        }
+
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+        }
+        
+        th { 
+            background-color: #f0f0f0; 
+            font-weight: bold;
+        }
+
+        .total { 
+            text-align: right; 
+            font-size: 1.2em; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            color: #2e7d32; 
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive layout */
+        @media (max-width: 768px) {
+            .forms-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('bill_generator') }}">Bill Generator</a>
+        <a href="{{ url_for('history') }}">Bill History</a>
+        <a href="{{ url_for('admin_panel') }}">Admin Panel</a>
+        <a href="{{ url_for('logout') }}" class="right">Logout</a>
+    </div>
+
+    <div class="main-wrapper">
+        <h1>Bill Generation</h1>
+        <hr>
+        <div class="forms-container">
+            <div class="form-section">
+                <h2>Create New Bill</h2>
+                <form id="bill-form">
+                    <label for="client-name">Client Name:</label>
+                    <input type="text" id="client-name" required>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="items-table-body">
+                            </tbody>
+                    </table>
+                    <div class="total">
+                        <p>Total: <span id="grand-total">0.00</span></p>
+                    </div>
+                    <button type="submit">Generate PDF</button>
+                </form>
+            </div>
+            
+            <div class="form-section">
+                <h2>Add New Item</h2>
+                <form id="add-item-form">
+                    <label for="new-item-name">Item Name:</label>
+                    <input type="text" id="new-item-name" placeholder="Item Name" required>
+                    
+                    <label for="new-item-price">Price:</label>
+                    <input type="number" step="0.01" id="new-item-price" placeholder="Price" required>
+                    
+                    <button type="submit">Add Item</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const itemsTableBody = document.getElementById('items-table-body');
+        const grandTotalSpan = document.getElementById('grand-total');
+        const billForm = document.getElementById('bill-form');
+        const addItemForm = document.getElementById('add-item-form');
+        
+        async function fetchItems() {
+            const response = await fetch('/items');
+            const items = await response.json();
+            itemsTableBody.innerHTML = '';
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price.toFixed(2)}</td>
+                    <td><input type="number" min="0" value="0" data-id="${item.id}" data-price="${item.price}" class="item-quantity"></td>
+                    <td class="item-total">0.00</td>
+                `;
+                itemsTableBody.appendChild(row);
+            });
+            document.querySelectorAll('.item-quantity').forEach(input => {
+                input.addEventListener('input', updateBill);
+            });
+        }
+
+        function updateBill() {
+            let grandTotal = 0;
+            const quantities = document.querySelectorAll('.item-quantity');
+            quantities.forEach(input => {
+                const price = parseFloat(input.dataset.price);
+                const quantity = parseInt(input.value) || 0;
+                const total = price * quantity;
+                input.closest('tr').querySelector('.item-total').textContent = total.toFixed(2);
+                grandTotal += total;
+            });
+            grandTotalSpan.textContent = grandTotal.toFixed(2);
+        }
+
+        billForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const clientName = document.getElementById('client-name').value;
+            const billItems = [];
+            const quantities = document.querySelectorAll('.item-quantity');
+            
+            quantities.forEach(input => {
+                const quantity = parseInt(input.value) || 0;
+                if (quantity > 0) {
+                    const row = input.closest('tr');
+                    billItems.push({
+                        name: row.cells[0].textContent,
+                        price: parseFloat(input.dataset.price),
+                        quantity: quantity,
+                        total: parseFloat(row.querySelector('.item-total').textContent)
+                    });
+                }
+            });
+
+            if (billItems.length === 0) {
+                alert("Please add at least one item to the bill.");
+                return;
+            }
+
+            const response = await fetch('/generate-pdf', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ client_name: clientName, bill_items: billItems })
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'bill.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                
+                document.getElementById('client-name').value = '';
+                document.querySelectorAll('.item-quantity').forEach(input => input.value = 0);
+                updateBill();
+            } else {
+                alert('Failed to generate PDF.');
+            }
+        });
+
+        // Add Item Form Submission
+        addItemForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('new-item-name').value;
+            const price = parseFloat(document.getElementById('new-item-price').value);
+
+            const response = await fetch('/items', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, price })
+            });
+
+            const result = await response.json();
+            alert(result.message || result.error);
+            if (response.ok) {
+                document.getElementById('new-item-name').value = '';
+                document.getElementById('new-item-price').value = '';
+                fetchItems(); // Reload the item list
+            }
+        });
+
+        fetchItems();
+    </script>
+</body>
+</html>
