@@ -1,0 +1,12 @@
+# Virtual environment
+venv/
+
+# Database file
+database.db
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Temporary files
+temp_qr.png

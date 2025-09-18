@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #FF6B6B, #FFCD6E, #FF894F, #FF66A3);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            position: relative;
+        }
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        .left-image-container {
+            position: absolute;
+            left: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .left-image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .form-container { 
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center; 
+            max-width: 400px;
+            width: 100%;
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            box-sizing: border-box;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .message { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 5px; 
+            font-weight: bold;
+        }
+        .error { 
+            background-color: #f8d7da; 
+            color: #721c24; 
+        }
+        .success { 
+            background-color: #d4edda; 
+            color: #155724; 
+        }
+        form input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form input[type="submit"] {
+            background-color: #FF6B6B;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        form input[type="submit"]:hover {
+            background-color: #FF894F;
+        }
+        a {
+            color: #FF66A3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 992px) {
+            .left-image-container {
+                display: none;
+            }
+            .form-container {
+                right: 50%;
+                transform: translate(50%, -50%);
+                max-width: 400px;
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="left-image-container">
+        <img src="{{ url_for('static', filename='images/background_1.png') }}" alt="Registration Illustration">
+    </div>
+    <div class="form-container">
+        <h2>User Registration</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{ url_for('register') }}">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br>
+            <label for="brand_name">Brand Name:</label><br>
+            <input type="text" id="brand_name" name="brand_name" required><br>
+            <input type="submit" value="Register">
+        </form>
+        <p>Already have an account? <a href="{{ url_for('login') }}">Log in here</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    
+    /* Yeh hai naya color-changing border code */
+    border: 5px solid transparent; /* Transparent border taaki border-image dikhe */
+    border-image: linear-gradient(
+        45deg,
+        #ff9999, /* Light Red */
+        #ffcc99, /* Light Orange */
+        #ffff99, /* Light Yellow */
+        #99ff99, /* Light Green */
+        #99ccff, /* Light Blue */
+        #9999ff, /* Light Indigo */
+        #cc99ff  /* Light Violet */
+    ) 1;
+    border-image-slice: 1; /* Border ko poori tarah se fill karta hai */
+    animation: moveGradient 5s linear infinite; /* Animation ko apply karo */
+}
+
+/* Yeh animation keyframes hain jo border-image ko move karenge */
+@keyframes moveGradient {
+    0% {
+        border-image-source: linear-gradient(45deg, #ff9999, #99ff99, #99ccff, #cc99ff, #ff9999);
+    }
+    25% {
+        border-image-source: linear-gradient(45deg, #99ff99, #99ccff, #cc99ff, #ff9999, #ff9999);
+    }
+    50% {
+        border-image-source: linear-gradient(45deg, #99ccff, #cc99ff, #ff9999, #ff9999, #99ff99);
+    }
+    75% {
+        border-image-source: linear-gradient(45deg, #cc99ff, #ff9999, #ff9999, #99ff99, #99ccff);
+    }
+    100% {
+        border-image-source: linear-gradient(45deg, #ff9999, #ff9999, #99ff99, #99ccff, #cc99ff);
+    }
+}
+h1, h2 {
+    color: #333;
+    text-align: center;
+}
+
+.form-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.add-item-form, .new-item-form {
+    flex: 1;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input[type="text"], input[type="number"], select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.bill-section {
+    margin-top: 30px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tfoot td {
+    font-weight: bold;
+    text-align: right;
+    background-color: #f9f9f9;
+}
+
+tfoot tr td:last-child {
+    text-align: left;
+}
+
+#print-bill-btn {
+    display: block;
+    margin-top: 20px;
+    width: 100%;
+    background-color: #28a745;
+}
+
+#print-bill-btn:hover {
+    background-color: #218838;
+}
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    
+    /* Background Image Code */
+    background-image: url('../images/background.jpg'); /* Relative path to your image */
+    background-size: cover; /* Image will cover the entire background */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-attachment: fixed; /* Fixes the image so it doesn't scroll with the content */
+}
+
+/* ...Rest of your CSS code... */
